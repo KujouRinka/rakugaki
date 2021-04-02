@@ -10,6 +10,6 @@ int someLambda() {
     int cap = 1;
     auto f1 = [](int a, int b) -> int { return a + b};
     auto f2 = [cap](int a) -> int { return cap + a };
-    
+
     return 0;
 }
