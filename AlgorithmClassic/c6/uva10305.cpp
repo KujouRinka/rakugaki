@@ -36,7 +36,7 @@ bool bfs(vector<vector<int>> &pointedTo, vector<int> &bePointedNum, vector<int> 
     return true;
 }
 
-int main() {
+int orderingTasks() {
     int taskQuan, relation;
     while (cin >> taskQuan >> relation && taskQuan != 0) {
         vector<vector<int>> pointTo(taskQuan + 1);
