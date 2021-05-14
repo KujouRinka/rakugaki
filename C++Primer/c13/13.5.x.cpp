@@ -14,12 +14,18 @@ public:
             elements(nullptr), first_free(nullptr), cap(nullptr) {}
 
     inline StrVec(std::initializer_list<std::string> il);
-    
+
     StrVec(const char *s);
+
+    StrVec(const std::string &s);
 
     StrVec(const StrVec &rhs);
 
+    StrVec(StrVec &&s) noexcept;
+
     StrVec &operator=(const StrVec &rhs);
+
+    std::string &operator[](const size_t &index);
 
     ~StrVec();
 
@@ -67,9 +73,10 @@ StrVec::StrVec(std::initializer_list<std::string> il) {
     cap = first_free;
 }
 
-StrVec::StrVec(const char *s) {
-    chk_n_alloc();
-    push_back(std::string(s));
+StrVec::StrVec(const char *s) : StrVec(std::string(s)) {}
+
+StrVec::StrVec(const std::string &s) : StrVec() {
+    push_back(s);
 }
 
 StrVec::StrVec(const StrVec &rhs) {
@@ -77,6 +84,11 @@ StrVec::StrVec(const StrVec &rhs) {
     elements = newData.first;
     first_free = newData.second;
     cap = first_free;
+}
+
+StrVec::StrVec(StrVec &&s) noexcept:
+        elements(s.elements), first_free(s.first_free), cap(s.cap) {
+    s.elements = s.first_free = s.cap = nullptr;
 }
 
 StrVec &StrVec::operator=(const StrVec &rhs) {
@@ -88,7 +100,12 @@ StrVec &StrVec::operator=(const StrVec &rhs) {
     return *this;
 }
 
+std::string &StrVec::operator[](const size_t &index) {
+    return elements[index];
+}
+
 StrVec::~StrVec() {
+    std::cout << "free called" << std::endl;
     free();
 }
 
@@ -113,6 +130,8 @@ void StrVec::resize(size_t n, const std::string &s) {
     }
 
 }
+
+std::allocator<std::string> StrVec::alloc;
 
 std::pair<std::string *, std::string *>
 StrVec::alloc_n_copy(const std::string *b, const std::string *e) {
