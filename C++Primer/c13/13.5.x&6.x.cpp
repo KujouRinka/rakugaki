@@ -7,7 +7,7 @@
 #include <algorithm>
 
 class StrVec {
-    
+
     friend inline void swap(StrVec &lhs, StrVec &rhs);
 
 public:
@@ -34,6 +34,8 @@ public:
     ~StrVec();
 
     void push_back(const std::string &s);
+
+    void push_back(std::string &&s);
 
     size_t size() const { return first_free - elements; }
 
@@ -127,6 +129,11 @@ StrVec::~StrVec() {
 void StrVec::push_back(const std::string &s) {
     chk_n_alloc();  // ensure enough space
     alloc.construct(first_free++, s);
+}
+
+void StrVec::push_back(std::string &&s) {
+    chk_n_alloc();
+    alloc.construct(first_free++, std::move(s));
 }
 
 inline
