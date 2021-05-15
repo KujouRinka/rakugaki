@@ -46,7 +46,11 @@ public:
 
     Message(const Message &rhs);
 
+    Message(Message &&rhs);
+
     Message &operator=(const Message &rhs);
+
+    Message &operator=(Message &&rhs);
 
     void save(Folder &f);
 
@@ -65,6 +69,8 @@ private:
     void add_to_Folders(const Message &msg);
 
     void remove_from_Folders();
+
+    void move_Folders(Message *msg);
 };
 
 #endif //DATA_STRUCTURES_AND_ALGORITHM_13_36_H
