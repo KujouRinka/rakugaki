@@ -7,6 +7,8 @@
 #include <algorithm>
 
 class StrVec {
+    
+    friend inline void swap(StrVec &lhs, StrVec &rhs);
 
 public:
 
@@ -24,6 +26,8 @@ public:
     StrVec(StrVec &&s) noexcept;
 
     StrVec &operator=(const StrVec &rhs);
+
+    StrVec &operator=(StrVec &&rhs) noexcept;
 
     std::string &operator[](const size_t &index);
 
@@ -100,11 +104,23 @@ StrVec &StrVec::operator=(const StrVec &rhs) {
     return *this;
 }
 
+StrVec &StrVec::operator=(StrVec &&rhs) noexcept {
+    if (this != &rhs) {
+        free();
+        elements = rhs.elements;
+        first_free = rhs.first_free;
+        cap = rhs.cap;
+        rhs.elements = rhs.first_free = rhs.cap = nullptr;
+    }
+    return *this;
+}
+
 std::string &StrVec::operator[](const size_t &index) {
     return elements[index];
 }
 
 StrVec::~StrVec() {
+    std::cout << "free called" << std::endl;
     free();
 }
 
@@ -171,4 +187,12 @@ void StrVec::reallocate(size_t n) {
     elements = newData;
     first_free = dest;
     cap = elements + n;
+}
+
+inline
+void swap(StrVec &lhs, StrVec &rhs) {
+    using std::swap;
+    swap(lhs.elements, rhs.elements);
+    swap(lhs.first_free, rhs.first_free);
+    swap(lhs.cap, rhs.cap);
 }

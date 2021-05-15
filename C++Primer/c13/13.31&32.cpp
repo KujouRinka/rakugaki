@@ -14,7 +14,14 @@ public:
     HasPtr(const HasPtr &p) :
             ps(p.ps), i(p.i), use(p.use) { ++*use; }
 
-    HasPtr &operator=(const HasPtr &rhs);
+    HasPtr(HasPtr &&p) noexcept:
+            ps(p.ps), i(p.i), use(p.use) { p.ps = nullptr; }
+
+    // HasPtr &operator=(const HasPtr &rhs);
+
+    // HasPtr &operator=(HasPtr &&rhs) noexcept;
+
+    HasPtr &operator=(HasPtr rhs);
 
     HasPtr &operator=(const string &s);
 
@@ -34,15 +41,25 @@ private:
     size_t *use;
 };
 
-HasPtr &HasPtr::operator=(const HasPtr &rhs) {
-    ++*rhs.use;
-    if (--*use == 0) {
-        delete ps;
-        delete use;
-    }
-    ps = rhs.ps;
-    use = rhs.use;
-    i = rhs.i;
+// HasPtr &HasPtr::operator=(const HasPtr &rhs) {
+//     ++*rhs.use;
+//     if (--*use == 0) {
+//         delete ps;
+//         delete use;
+//     }
+//     ps = rhs.ps;
+//     use = rhs.use;
+//     i = rhs.i;
+//     return *this;
+// }
+//
+// HasPtr &HasPtr::operator=(HasPtr &&rhs) noexcept {
+//     swap(*this, rhs);
+//     return *this;
+// }
+
+HasPtr &HasPtr::operator=(HasPtr rhs) {
+    swap(*this, rhs);
     return *this;
 }
 
