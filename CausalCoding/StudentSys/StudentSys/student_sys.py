@@ -10,8 +10,9 @@ class PreHandler(object):
     def send_cmd(self, *par):
         try:
             return getattr(self, par[0])(*par[1:])
-        except AttributeError:
-            print('invalid command, type "help" to get more info')
+        except (AttributeError, PermissionError):
+            if len(par[0]) != 0:
+                print('invalid command, type "help" to get more info')
 
     def use(self, hd=None):
         if hd is None:
@@ -53,17 +54,17 @@ class PreHandler(object):
 
     @staticmethod
     def quit():
-        print('bye')
+        print('bye!')
         exit(0)
 
 
 def pre_cmd(pre_handler: PreHandler):
-    return pre_handler.send_cmd(*input().split(' '))
+    return pre_handler.send_cmd(*input().strip().split(' '))
 
 
 def send(handle: StudentSys, hd):
     print('now you have entered into handle: {}'.format(hd))
-    while handle.send_cmd(input('{} >>> '.format(hd))):
+    while handle.send_cmd(input('{} >>> '.format(hd)).strip()):
         pass
 
 

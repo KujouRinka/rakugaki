@@ -22,5 +22,6 @@ class StudentSys(object):
         try:
             getattr(self._handler, cmd)()
         except AttributeError:
-            print('invalid command, type "help" to get more info.')
+            if cmd != '':
+                print('invalid command, type "help" to get more info.')
         return cmd != 'quit'

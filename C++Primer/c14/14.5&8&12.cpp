@@ -9,6 +9,16 @@ class Date {
 
     friend bool operator==(Date &lhs, Date &rhs);
 
+    friend bool operator!=(Date &lhs, Date &rhs);
+
+    friend bool operator<(Date &lhs, Date &rhs);
+
+    friend bool operator<=(Date &lhs, Date &rhs);
+
+    friend bool operator>(Date &lhs, Date &rhs);
+
+    friend bool operator>=(Date &lhs, Date &rhs);
+
 public:
 
     Date(const int &y = 0, const int &m = 0, const int &d = 0) :
@@ -37,4 +47,26 @@ std::istream &operator>>(std::istream &is, Date &rhs) {
 
 bool operator==(Date &lhs, Date &rhs) {
     return lhs.year == rhs.year && lhs.month == rhs.month && lhs.day == rhs.day;
+}
+
+bool operator!=(Date &lhs, Date &rhs) {
+    return !(lhs == rhs);
+}
+
+bool operator<(Date &lhs, Date &rhs) {
+    return lhs.year < rhs.year ||
+           (lhs.year == rhs.year && lhs.month < rhs.month) ||
+           (lhs.year == rhs.year && lhs.month == rhs.month && lhs.day < rhs.day);
+}
+
+bool operator<=(Date &lhs, Date &rhs) {
+    return lhs < rhs || lhs == rhs;
+}
+
+bool operator>(Date &lhs, Date &rhs) {
+    return !(lhs <= rhs);
+}
+
+bool operator>=(Date &lhs, Date &rhs) {
+    return lhs > rhs || lhs == rhs;
 }

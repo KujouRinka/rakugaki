@@ -155,7 +155,7 @@ class SysFileHandler(SysBaseHandler):
                     search_method = \
                         int(input('search by id or name (1/2): ')) - 1
                     m = ('id', 'name')[search_method]
-                except IndexError:
+                except (IndexError, ValueError):
                     print('invalid input, try again please!')
                 else:
                     search_content = \
