@@ -29,7 +29,11 @@ public:
 
     StrVec &operator=(StrVec &&rhs) noexcept;
 
-    std::string &operator[](const size_t &index);
+    StrVec &operator=(std::initializer_list<std::string> il);
+
+    inline std::string &operator[](const size_t &index);
+
+    inline const std::string &operator[](const size_t &index) const;
 
     ~StrVec();
 
@@ -117,7 +121,22 @@ StrVec &StrVec::operator=(StrVec &&rhs) noexcept {
     return *this;
 }
 
+StrVec &StrVec::operator=(std::initializer_list<std::string> il) {
+    auto data = alloc_n_copy(il.begin(), il.end());
+    free();
+    elements = data.first;
+    first_free = data.second;
+    cap = first_free;
+    return *this;
+}
+
+inline
 std::string &StrVec::operator[](const size_t &index) {
+    return elements[index];
+}
+
+inline
+const std::string &StrVec::operator[](const size_t &index) const {
     return elements[index];
 }
 
