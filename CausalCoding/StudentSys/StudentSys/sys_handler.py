@@ -173,7 +173,25 @@ class SysFileHandler(SysBaseHandler):
                 break
 
     def delete(self):
-        pass
+        data, ok = self._load_data()
+        if not ok:
+            print('data file not found!')
+            return
+        while True:
+            del_ID = input('input ID of student you want to delete: ')
+            count = 0
+            for each in data:
+                if each['id'] == del_ID:
+                    count += 1
+                    data.remove(each)
+                    print('student of ID: {} has been deleted'.format(del_ID))
+            if count == 0:
+                print('not found student of ID {}'.format(del_ID))
+            self._dump_data(data)
+            self.show()
+            is_continue = input('continue deleting? (y/n): ')
+            if is_continue != 'y':
+                break
 
     def modify(self):
         pass
