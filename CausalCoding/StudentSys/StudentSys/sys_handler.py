@@ -49,7 +49,15 @@ class SysBaseHandler(ABC):
         pass
 
     @abstractmethod
-    def _save(self):
+    def _append_data(self, append_data):
+        pass
+
+    @abstractmethod
+    def _load_data(self):
+        pass
+
+    @abstractmethod
+    def _dump_data(self, data):
         pass
 
     @staticmethod
@@ -137,7 +145,7 @@ class SysFileHandler(SysBaseHandler):
                 is_continue = input('continue to add? (y/n): ')
                 if is_continue != 'y':
                     break
-        self._save(student_list)
+        self._append_data(student_list)
 
     def search(self):
         """
@@ -173,6 +181,9 @@ class SysFileHandler(SysBaseHandler):
                 break
 
     def delete(self):
+        """
+        Delete some records of students with corresponding ID.
+        """
         data, ok = self._load_data()
         if not ok:
             print('data file not found!')
@@ -194,23 +205,108 @@ class SysFileHandler(SysBaseHandler):
                 break
 
     def modify(self):
-        pass
+        """
+        Modify information of some students through ID.
+        """
+        self.show()
+        data, ok = self._load_data()
+        if not ok:
+            print('data file not found')
+            return
+        while True:
+            f = False
+            student_ID = input('input ID of student you want to modify: ')
+            for each in data:
+                if each['id'] == student_ID:
+                    f = True
+                    print('student of id: {} found, name is {}: '.format(student_ID, each['name']))
+                    tmp = each
+                    while True:
+                        try:
+                            tmp['name'] = input('input name')
+                            tmp['score']['english'] = input('input English score: ')
+                            tmp['score']['python'] = input('input Python score: ')
+                            tmp['score']['c'] = input('input Clang score: ')
+                        except ValueError:
+                            print('invalid input, except a integer... input again please')
+                        else:
+                            data.remove(each)
+                            data.append(tmp)
+            if not f:
+                print('student of id: {} not found'.format(student_ID))
+            is_continue = input('continue modifying? (y/n): ')
+            if is_continue != 'y':
+                break
 
     def sort(self):
-        pass
+        """
+        Sort students order by command you input.
+        """
+        self.show()
+        data, ok = self._load_data()
+        if not ok:
+            print('data file not found')
+            return
+
+        f = bool()
+        while True:
+            order = input('please select 0(ascending) or 1(descending)')
+            if order == '0':
+                f = False
+            elif order == '1':
+                f = True
+            else:
+                print('valid input, please try again')
+                continue
+            break
+
+        mode_map = ['', 'english', 'python', 'c']
+        while True:
+            mode_code = int(input('select order method: 0(total), 1(English), 2(python), 3(Clang)'))
+            if mode_code == 0:
+                data.sort(key=lambda x: sum(x['score'].values()), reverse=f)
+            else:
+                try:
+                    data.sort(key=lambda x: x['score'][mode_map[mode_code]], reverse=f)
+                except IndexError:
+                    print('invalid input, please try again')
+                else:
+                    break
+        self.show_students(data)
 
     def total(self):
-        pass
+        """
+        Count quantity of students.
+        """
+        data, ok = self._load_data()
+        if not ok:
+            print('data file not found')
+            return
+        if len(data) == 0:
+            print('no data have record')
+        else:
+            print('there are {0} record{1} of student{1}'
+                  .format(len(data), 's' if len(data) > 1 else ''))
 
     def show(self):
-        pass
+        """
+        Show all information of students.
+        """
+        data, ok = self._load_data()
+        if not ok:
+            print('data file not found')
+            return
+        self.show_students(data)
 
-    def _save(self, append_data: list):
+    def _append_data(self, append_data: list):
+        """
+        Append data from append_data parameter to json file.
+        """
         students = self._load_data()[0]
         students += append_data
         self._dump_data(students)
 
-    def _load_data(self):
+    def _load_data(self) -> (list, bool):
         """
         Load student data from a json file.
         return 2 value, they are student data and a status code.
@@ -256,5 +352,11 @@ class SysDatabaseHandler(SysBaseHandler):
     def show(self):
         pass
 
-    def _save(self):
+    def _append_data(self, append_data):
+        pass
+
+    def _load_data(self):
+        pass
+
+    def _dump_data(self, data):
         pass
