@@ -34,29 +34,64 @@ public:
 
     Bulk_quote() = default;
 
-    Bulk_quote(const std::string &, double, std::size_t, double);
+    Bulk_quote(const std::string &book, double p,
+               std::size_t qty, double disc) :
+            Quote(book, p), min_qty(qty), discount(disc) {};
 
-    double net_price(std::size_t) const override;
+    double net_price(std::size_t cnt) const override;
 
 private:
 
-    std::size_t num_qty = 0;
+    std::size_t min_qty = 0;
     double discount = 0.0;
 
 };
 
+double Bulk_quote::net_price(std::size_t cnt) const {
+    if (cnt >= min_qty)
+        return cnt * (1 - discount) * price;
+    else
+        return cnt * price;
+}
+
+class Limited_quote : public Quote {
+
+public:
+
+    Limited_quote() = default;
+
+    Limited_quote(const std::string &book, double p,
+                  std::size_t qty, double disc) :
+            Quote(book, p), min_qty(qty), discount(disc) {}
+
+    double net_price(std::size_t cnt) const override;
+
+private:
+
+    std::size_t min_qty;
+    double discount;
+
+};
+
+double Limited_quote::net_price(std::size_t cnt) const {
+    if (cnt <= min_qty)
+        return cnt * (1 - discount) * price;
+    else
+        return ((1 - discount) * min_qty + (cnt - min_qty)) * price;
+}
+
 double print_total(std::ostream &os, const Quote &item, std::size_t n) {
     double ret = item.net_price(n);
-    os << "ISBN: " << n << " total due: " << ret << std::endl;
+    os << "ISBN: " << item.isbn() << " total due: " << ret << std::endl;
     return ret;
 }
 
-void f(Quote &q) {
-
-}
-
 int main() {
-    Bulk_quote b1;
-
+    Quote b1("123456-2345", 30.5);
+    Bulk_quote b2("114514-2333", 30.5, 50, 0.2);
+    Limited_quote b3("170001-1024", 30.5, 50, 0.2);
+    print_total(std::cout, b1, 100);
+    print_total(std::cout, b2, 100);
+    print_total(std::cout, b3, 100);
     return 0;
 }
