@@ -16,6 +16,10 @@ public:
         return n * price;
     }
 
+    virtual void debug() const {
+        std::cout << "bookNO=" << bookNo << " price=" << price << std::endl;
+    }
+
     virtual ~Quote() = default;
 
 private:
@@ -39,6 +43,11 @@ public:
             Quote(book, p), min_qty(qty), discount(disc) {};
 
     double net_price(std::size_t cnt) const override;
+
+    void debug() const override {
+        Quote::debug();
+        std::cout << "min_qty=" << min_qty << " discount=" << discount << std::endl;
+    }
 
 private:
 
@@ -65,6 +74,11 @@ public:
             Quote(book, p), min_qty(qty), discount(disc) {}
 
     double net_price(std::size_t cnt) const override;
+
+    void debug() const override {
+        Quote::debug();
+        std::cout << "min_qty=" << min_qty << " discount=" << discount << std::endl;
+    }
 
 private:
 
