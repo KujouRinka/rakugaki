@@ -32,7 +32,26 @@ protected:
 
 };
 
-class Bulk_quote : public Quote {
+class Disc_quote : public Quote {
+
+public:
+
+    Disc_quote() = default;
+
+    Disc_quote(const std::string &book, double price,
+               std::size_t qty, double disc) :
+            Quote(book, price), quantity(qty), discount(disc) {}
+
+    double net_price(std::size_t) const override = 0;
+
+protected:
+
+    std::size_t quantity = 0;
+    double discount = 0.0;
+
+};
+
+class Bulk_quote : public Disc_quote {
 
 public:
 
@@ -40,30 +59,25 @@ public:
 
     Bulk_quote(const std::string &book, double p,
                std::size_t qty, double disc) :
-            Quote(book, p), min_qty(qty), discount(disc) {};
+            Disc_quote(book, p, qty, disc) {};
 
     double net_price(std::size_t cnt) const override;
 
     void debug() const override {
         Quote::debug();
-        std::cout << "min_qty=" << min_qty << " discount=" << discount << std::endl;
+        std::cout << "quantity=" << quantity << " discount=" << discount << std::endl;
     }
-
-private:
-
-    std::size_t min_qty = 0;
-    double discount = 0.0;
 
 };
 
 double Bulk_quote::net_price(std::size_t cnt) const {
-    if (cnt >= min_qty)
+    if (cnt >= quantity)
         return cnt * (1 - discount) * price;
     else
         return cnt * price;
 }
 
-class Limited_quote : public Quote {
+class Limited_quote : public Disc_quote {
 
 public:
 
@@ -71,27 +85,22 @@ public:
 
     Limited_quote(const std::string &book, double p,
                   std::size_t qty, double disc) :
-            Quote(book, p), min_qty(qty), discount(disc) {}
+            Disc_quote(book, p, qty, disc) {}
 
     double net_price(std::size_t cnt) const override;
 
     void debug() const override {
         Quote::debug();
-        std::cout << "min_qty=" << min_qty << " discount=" << discount << std::endl;
+        std::cout << "quantity=" << quantity << " discount=" << discount << std::endl;
     }
-
-private:
-
-    std::size_t min_qty;
-    double discount;
 
 };
 
 double Limited_quote::net_price(std::size_t cnt) const {
-    if (cnt <= min_qty)
+    if (cnt <= quantity)
         return cnt * (1 - discount) * price;
     else
-        return ((1 - discount) * min_qty + (cnt - min_qty)) * price;
+        return ((1 - discount) * quantity + (cnt - quantity)) * price;
 }
 
 double print_total(std::ostream &os, const Quote &item, std::size_t n) {
