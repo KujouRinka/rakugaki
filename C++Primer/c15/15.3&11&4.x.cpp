@@ -56,9 +56,10 @@ protected:
 class Bulk_quote : public Disc_quote {
 public:
     Bulk_quote() = default;
-    Bulk_quote(const std::string &book, double p,
-               std::size_t qty, double disc) :
-            Disc_quote(book, p, qty, disc) {}
+    // Bulk_quote(const std::string &book, double p,
+    //            std::size_t qty, double disc) :
+    //         Disc_quote(book, p, qty, disc) {}
+    using Disc_quote::Disc_quote;
     Bulk_quote(const Bulk_quote &rhs) :
             Disc_quote(rhs) {}
 
@@ -84,9 +85,10 @@ double Bulk_quote::net_price(std::size_t cnt) const {
 class Limited_quote : public Disc_quote {
 public:
     Limited_quote() = default;
-    Limited_quote(const std::string &book, double p,
-                  std::size_t qty, double disc) :
-            Disc_quote(book, p, qty, disc) {}
+    // Limited_quote(const std::string &book, double p,
+    //               std::size_t qty, double disc) :
+    //         Disc_quote(book, p, qty, disc) {}
+    using Disc_quote::Disc_quote;
     Limited_quote(const Limited_quote &rhs) :
             Disc_quote(rhs) {}
 
