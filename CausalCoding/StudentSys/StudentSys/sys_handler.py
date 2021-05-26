@@ -95,7 +95,9 @@ class SysBaseHandler(ABC):
 
 class SysFileHandler(SysBaseHandler):
     """
-    This class help StudentSys to complete operation
+    This is a subclass of SysBaseHandler.
+
+    This class helps StudentSys to complete operation
     which implement on file.
 
     The structure of json file is like example below:
@@ -328,6 +330,12 @@ class SysFileHandler(SysBaseHandler):
 
 
 class SysDatabaseHandler(SysBaseHandler):
+    """
+    This is subclass of SysBaseHandler.
+
+    This class use mysql database to implement same
+    feature of class SysFileHandler.
+    """
     def __init__(self, sys):
         super().__init__(sys)
 
