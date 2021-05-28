@@ -5,6 +5,8 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <algorithm>
+#include <cctype>
 
 // START TextQuery part
 class QueryResult;
@@ -12,16 +14,18 @@ class QueryResult;
 class TextQuery {
 public:
     using line_no = std::vector<std::string>::size_type;
-    explicit TextQuery(std::ifstream &is);
+    explicit TextQuery(std::istream &is);
     QueryResult query(const std::string &sought) const;
 
 private:
     std::shared_ptr<std::vector<std::string>> file;     // store file data
-    std::map<std::string, std::shared_ptr<std::set<line_no>>> wm;    // word map
+    // word map, which store lines each word appear.
+    std::map<std::string, std::shared_ptr<std::set<line_no>>> wm;
 };
 
 class QueryResult {
     // Store result of querying in lines.
+    friend std::ostream &print(std::ostream &os, const QueryResult &qr);
 public:
     QueryResult(std::string s,
                 std::shared_ptr<std::set<TextQuery::line_no>> p,
@@ -45,8 +49,24 @@ private:
     std::shared_ptr<std::vector<std::string>> file;     // store file data
 };
 
+std::string proc_word(const std::string &s) {
+    // add this function to delete non-alpha char of s
+    std::string::size_type start = 0;
+    decltype(start) backSpace = 0;
+    for (auto &c : s) {
+        if (isalpha(c))
+            break;
+        ++start;
+    }
+    for (auto it = s.crbegin(); it != s.crend(); ++it) {
+        if (isalpha(*it))
+            break;
+        ++backSpace;
+    }
+    return s.substr(start, s.size() - backSpace - start);
+}
 
-TextQuery::TextQuery(std::ifstream &is) {
+TextQuery::TextQuery(std::istream &is) {
     // read file data to file obj.
     std::string text;
 
@@ -60,6 +80,7 @@ TextQuery::TextQuery(std::ifstream &is) {
         std::istringstream line(text);
         std::string word;
         while (line >> word) {
+            word = proc_word(word);
             auto &lines = wm[word];
             if (!lines)
                 lines.reset(new std::set<line_no>);
@@ -69,7 +90,8 @@ TextQuery::TextQuery(std::ifstream &is) {
 }
 
 QueryResult TextQuery::query(const std::string &sought) const {
-    // return result QueryResult
+    // construct a QueryResult, and
+    // return result QueryResult.
     static std::shared_ptr<std::set<line_no>> nodata(new std::set<line_no>);
 
     auto loc = wm.find(sought);
@@ -78,6 +100,8 @@ QueryResult TextQuery::query(const std::string &sought) const {
     else
         return QueryResult(sought, loc->second, file);
 }
+// END TextQuery part
+
 
 class Query_base {
     friend class Query;
@@ -87,12 +111,10 @@ protected:
 
 private:
     // Execute and return result
-    virtual QueryResult eval(const TextQuery &) const = 0;
+    virtual QueryResult eval(const TextQuery &t) const = 0;
     // Generate querying string ver
     virtual std::string rep() const = 0;
 };
-// END TextQuery part
-
 
 // START Query part
 class WordQuery;
@@ -106,7 +128,7 @@ class Query {
     friend Query inline operator&(const Query &lhs, const Query &rhs);
     friend Query inline operator|(const Query &lhs, const Query &rhs);
 public:
-    inline Query(std::string &q);
+    inline Query(const std::string &q);
 
     QueryResult eval(const TextQuery &t) const {
         return q->eval(t);
@@ -139,7 +161,7 @@ private:
 };
 
 inline
-Query::Query(std::string &q) : q(new WordQuery(q)) {}
+Query::Query(const std::string &q) : q(new WordQuery(q)) {}
 
 class NotQuery : public Query_base {
     friend Query operator~(const Query &rhs);
@@ -202,6 +224,41 @@ QueryResult OrQuery::eval(const TextQuery &t) const {
     return QueryResult(rep(), ret_lines, left.get_file());
 }
 
+QueryResult AndQuery::eval(const TextQuery &t) const {
+    auto left = lhs.eval(t), right = rhs.eval(t);
+    auto ret_lines = std::make_shared<std::set<line_no>>();
+    std::set_intersection(left.begin(), left.end(),
+                          right.begin(), right.end(),
+                          std::inserter(*ret_lines, ret_lines->begin()));
+    return QueryResult(rep(), ret_lines, left.get_file());
+}
+
+QueryResult NotQuery::eval(const TextQuery &t) const {
+    auto result = query.eval(t);
+    auto ret_lines = std::make_shared<std::set<line_no>>();
+    auto line_size = result.get_file()->size();
+    for (int i = 0; i < line_size; ++i)
+        ret_lines->insert(i);
+    for (auto i : result)
+        ret_lines->erase(i);
+    return QueryResult(rep(), ret_lines, result.get_file());
+}
+
+std::ostream &print(std::ostream &os, const QueryResult &qr) {
+    os << qr.sought << " occurs " << qr.lines->size() << " "
+       << "time(s)" << std::endl;
+
+    std::set<TextQuery::line_no> dataSet(qr.lines->begin(), qr.lines->end());   // *
+    for (auto num : dataSet)    // *
+        os << "\t(line " << num + 1 << ") "
+           << *(qr.file->begin() + num) << std::endl;
+    return os;
+}
+
 int main() {
+    std::ifstream ifs("read.in");
+    TextQuery t(ifs);
+    Query q = ~(Query("Alice") | Query("Daddy"));
+    print(std::cout, q.eval(t));
     return 0;
 }
