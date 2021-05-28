@@ -237,10 +237,13 @@ QueryResult NotQuery::eval(const TextQuery &t) const {
     auto result = query.eval(t);
     auto ret_lines = std::make_shared<std::set<line_no>>();
     auto line_size = result.get_file()->size();
-    for (int i = 0; i < line_size; ++i)
-        ret_lines->insert(i);
-    for (auto i : result)
-        ret_lines->erase(i);
+    auto beg = result.begin(), end = result.end();
+    for (std::size_t n = 0; n < line_size; ++n) {
+        if (beg == end || *beg != n)
+            ret_lines->insert(n);
+        else if (beg != end)
+            ++beg;
+    }
     return QueryResult(rep(), ret_lines, result.get_file());
 }
 
