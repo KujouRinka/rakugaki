@@ -3,8 +3,18 @@
 #include <string>
 #include <memory>
 
+template<typename>
+class Blob;
+template<typename>
+class BlobPtr;
+
+template<typename T>
+bool operator==(const Blob<T> &lhs, const Blob<T> &rhs);
+
 template<typename T>
 class Blob {
+    friend class BlobPtr<T>;
+    friend bool operator==<T>(const Blob<T> &lhs, const Blob<T> &rhs);
 public:
     typedef T value_type;
     typedef typename std::vector<T>::size_type size_type;
@@ -43,7 +53,7 @@ class BlobPtr {
 
 private:
     std::shared_ptr<std::vector<T>>
-    check(std::size_t, const std::string &) const;
+    check(std::size_t i, const std::string &msg) const;
 
     std::weak_ptr<std::vector<T>> wptr;
     std::size_t curr;
@@ -96,7 +106,7 @@ template<typename T>
 BlobPtr<T> &BlobPtr<T>::operator--() {
     check(--curr, "pointer move before end");
     return *this;
-    
+
 }
 
 template<typename T>
@@ -104,6 +114,21 @@ BlobPtr<T> BlobPtr<T>::operator--(int) {
     auto ret = *this;
     --*this;
     return ret;
+}
+
+template<typename T>
+std::shared_ptr<std::vector<T>>
+BlobPtr<T>::check(std::size_t i, const std::string &msg) const {
+    if (wptr.expired())
+        throw std::runtime_error("unbound BlobPtr");
+    if (i >= wptr->size() || i < 0)
+        throw std::out_of_range(msg);
+}
+
+
+template<typename T>
+bool operator==(const Blob<T> &lhs, const Blob<T> &rhs) {
+    return *lhs.data == *rhs.data;
 }
 
 int main() {
