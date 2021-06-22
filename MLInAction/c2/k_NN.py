@@ -26,4 +26,4 @@ def classify0(inX, dataSet, labels, k):
     return sortedClassCount[0][0]
 
 
-print(classify0([0.5, 0.55], *createDataSet(), 2))
+print(classify0([0, 0], *createDataSet(), 3))
