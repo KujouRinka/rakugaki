@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from c2.date.k_NN import *
 
 
 def file2matrix(filename):
@@ -17,3 +19,50 @@ def file2matrix(filename):
 
     return return_mat, class_label_vector
 
+
+def auto_norm(data_set):
+    min_vals = data_set.min(0)
+    max_vals = data_set.max(0)
+    ranges = max_vals - min_vals
+    norm_data_set = np.zeros(data_set.shape)
+    m = data_set.shape[0]
+    norm_data_set = data_set - np.tile(min_vals, (m, 1))
+    norm_data_set = norm_data_set / np.tile(ranges, (m, 1))
+    return norm_data_set, ranges, min_vals
+
+
+def dating_class_test():
+    ho_ratio = 0.1
+    dating_data_mat, dating_labels = \
+        file2matrix('datingTestSet2.txt')
+    norm_mat, ranges, min_vals = auto_norm(dating_data_mat)
+    m = norm_mat.shape[0]
+    num_test_vecs = int(m * ho_ratio)
+    error_count = 0
+    for i in range(num_test_vecs):
+        classifier_result = \
+            classify0(norm_mat[i, :], norm_mat[num_test_vecs:m, :],
+                      dating_labels[num_test_vecs:m], 3)
+        print('the classifier came back with: {}, the real answer '
+              'is: {}'.format(classifier_result, dating_labels[i]))
+        if classifier_result != dating_labels[i]:
+            error_count += 1
+    print('the total error rate is: {}'
+          .format(error_count / num_test_vecs))
+
+
+def main():
+    # dating_data_mat, dating_labels = \
+    #     file2matrix('datingTestSet2.txt')
+
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.scatter(dating_data_mat[:, 0], dating_data_mat[:, 1],
+    #            15.0 * np.array(dating_labels).astype(np.float_),
+    #            15.0 * np.array(dating_labels).astype(np.float_))
+    # plt.show()
+    dating_class_test()
+
+
+if __name__ == '__main__':
+    main()
