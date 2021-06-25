@@ -1,0 +1,1 @@
+unzip digits.zip to this directory as training digits and test digits.

@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from c2.date.k_NN import *
+from c2.k_NN import *
 
 
 def file2matrix(filename):
@@ -51,6 +51,24 @@ def dating_class_test():
           .format(error_count / num_test_vecs))
 
 
+def classify_person():
+    result_list = ['not at all', 'in small doses', 'in large doses']
+    percent_tats = float(input(
+        'percentage of time spent playing video games: '))
+    ff_miles = float(input('frequent flier miles earned per year: '))
+    ice_cream = float(input(
+        'liters of ice cream consumed per year: '))
+    dating_data_mat, dating_labels = \
+        file2matrix('datingTestSet2.txt')
+    norm_mat, ranges, min_vals = auto_norm(dating_data_mat)
+    in_arr = np.array([ff_miles, percent_tats, ice_cream])
+    classifier_result = classify0((in_arr - min_vals) / ranges,
+                                  norm_mat,
+                                  dating_labels, 3)
+    print('you will probably like this person: ',
+          result_list[int(classifier_result) - 1])
+
+
 def main():
     # dating_data_mat, dating_labels = \
     #     file2matrix('datingTestSet2.txt')
@@ -61,7 +79,7 @@ def main():
     #            15.0 * np.array(dating_labels).astype(np.float_),
     #            15.0 * np.array(dating_labels).astype(np.float_))
     # plt.show()
-    dating_class_test()
+    classify_person()
 
 
 if __name__ == '__main__':
