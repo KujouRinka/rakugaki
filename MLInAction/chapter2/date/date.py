@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from c2.k_NN import *
+from chapter2.k_NN import *
 
 
 def file2matrix(filename):

@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from c2.k_NN import *
+from chapter2.k_NN import *
 
 
 def file2vector(filename):
