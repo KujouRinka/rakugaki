@@ -1,5 +1,6 @@
 import operator
 from math import log
+from chapter3.treePlotter import *
 
 
 def create_data_set() -> (list, list):
@@ -103,10 +104,38 @@ def create_tree(data_set, labels) -> dict:
     return my_tree
 
 
+def classify(input_tree, feat_labels, test_vec):
+    root_name = tuple(input_tree.keys())[0]
+    node_struct = input_tree[root_name]
+    feat_index = feat_labels.index(root_name)
+    for choose, node in node_struct.items():
+        if test_vec[feat_index] == choose:
+            if isinstance(node, dict):
+                return classify(node, feat_labels, test_vec)
+            else:
+                return node
+
+
+def store_tree(input_tree, filename):
+    import pickle
+    with open(filename, 'wb') as f:
+        pickle.dump(input_tree, f)
+
+
+def grab_tree(filename):
+    import pickle
+    with open(filename, 'rb') as f:
+        tree = pickle.load(f)
+    return tree
+
+
 def main():
     my_dat, labels = create_data_set()
-    my_tree = create_tree(my_dat, labels)
+    print(labels)
+    my_tree = retrieve_tree(0)
     print(my_tree)
+    print(classify(my_tree, labels, [1, 0]))
+    print(classify(my_tree, labels, [1, 1]))
 
 
 if __name__ == '__main__':
