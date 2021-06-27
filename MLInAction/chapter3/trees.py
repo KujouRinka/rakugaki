@@ -130,12 +130,7 @@ def grab_tree(filename):
 
 
 def main():
-    my_dat, labels = create_data_set()
-    print(labels)
-    my_tree = retrieve_tree(0)
-    print(my_tree)
-    print(classify(my_tree, labels, [1, 0]))
-    print(classify(my_tree, labels, [1, 1]))
+    pass
 
 
 if __name__ == '__main__':
