@@ -26,6 +26,7 @@ func Run(searchTerm string) {
 
 		go func(matcher Matcher, feed *Feed) {
 			Match(matcher, feed, searchTerm, results)
+			waitGroup.Done()
 		}(matcher, feed)
 	}
 
