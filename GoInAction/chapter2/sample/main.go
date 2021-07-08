@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	_ "sample/matchers"
 	"sample/search"
 )
 
