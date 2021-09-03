@@ -53,14 +53,10 @@ void heap::pop() {
             else break;
             ind = left;
         } else {
-            int leftVal = data[left];
-            int rightVal = data[right];
-            if (leftVal <= rightVal && leftVal < data[ind]) {
-                swap(data[ind], data[left]);
-                ind = left;
-            } else if (rightVal < leftVal && rightVal < data[ind]) {
-                swap(data[ind], data[right]);
-                ind = right;
+            int t = data[left] <= data[right] ? left : right;
+            if (data[t] < data[ind]) {
+                swap(data[t], data[ind]);
+                ind = t;
             } else break;
         }
     }
