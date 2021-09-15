@@ -2,8 +2,6 @@ class Solution {
 public:
     int findPeakElement(const vector<int> &nums) {
         auto sz = nums.size();
-        if (sz == 1)
-            return 0;
         auto get = [&sz, &nums](int index) -> int64_t {
             return index < 0 || index >= sz ? -0x7fffffffffLL : nums[index];
         };
