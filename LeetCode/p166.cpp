@@ -1,9 +1,15 @@
-struct pairHash {
-    template<typename T, typename U>
-    size_t operator()(const pair<T, U> &i) const {
-        return hash<T>()(i.first) ^ hash<U>()(i.second);
+namespace std {
+    template<>
+    struct hash<pair<int64_t, int64_t>> {
+        typedef size_t result_type;
+        typedef pair<int64_t, int64_t> argument_type;
+        size_t operator()(const argument_type &p) const;
+    };
+
+    size_t hash<pair<int64_t, int64_t>>::operator()(const argument_type &p) const {
+        return hash<int64_t>()(p.first) ^ hash<int64_t>()(p.second);
     }
-};
+}
 
 class Solution {
 public:
