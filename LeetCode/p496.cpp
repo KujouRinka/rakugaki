@@ -1,3 +1,5 @@
+// 栈保证第一个
+// 递减保证第一个
 class Solution {
 public:
     vector<int> nextGreaterElement(vector<int> &nums1, vector<int> &nums2) {
