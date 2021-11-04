@@ -13,24 +13,18 @@ vector<int> strNext(const string &s) {
     vector<int> next_vec(sz);
     next_vec[0] = -1;
     for (int j = 1; j < sz; ++j) {
+        // calculate next_vec value
         for (int k = j - 1; k >= 1; --k) {
             if (strncmp(s.c_str(), s.c_str() + (j - k), k) == 0) {
                 next_vec[j] = k;
                 break;
             }
         }
+        // calculate next_val_vec value
+        if (s[j] == s[next_vec[j]])
+            next_vec[j] = next_vec[next_vec[j]];
     }
-
-    // calculate next_val_vec
-    vector<int> next_val_vec(sz);
-    next_val_vec[0] = -1;
-    for (int i = 0; i < sz; ++i) {
-        if (s[i] == s[next_vec[i]])
-            next_val_vec[i] = next_val_vec[next_vec[i]];
-        else    // s[i] != s[next_vec[i]]
-            next_val_vec[i] = next_vec[i];
-    }
-    return next_val_vec;
+    return next_vec;
 }
 
 int kmpMatch(const string &tar, const string &mode) {
