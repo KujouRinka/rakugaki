@@ -1,4 +1,5 @@
 #ifndef DATA_STRUCTURES_AND_ALGORITHM_HASH_SEP_H
+#define DATA_STRUCTURES_AND_ALGORITHM_HASH_SEP_H
 // 分离链接法
 
 #define MinTableSize 5
@@ -24,7 +25,5 @@ ElementType Retrieve(Position P);
 #ifdef __cplusplus
 }
 #endif
-
-#define DATA_STRUCTURES_AND_ALGORITHM_HASH_SEP_H
 
 #endif //DATA_STRUCTURES_AND_ALGORITHM_HASH_SEP_H
