@@ -5,24 +5,23 @@
 using namespace std;
 
 vector<int> strNext(const string &s) {
-
-    // calculate next_vec
-    auto sz = s.size();
+    int sz = s.size();
     if (sz == 0)
         return {};
     vector<int> next_vec(sz);
     next_vec[0] = -1;
-    for (int j = 1; j < sz; ++j) {
-        // calculate next_vec value
-        for (int k = j - 1; k >= 1; --k) {
-            if (strncmp(s.c_str(), s.c_str() + (j - k), k) == 0) {
-                next_vec[j] = k;
-                break;
-            }
+    for (int j = 0, i = 1; i <= sz - 2;) {
+        if (s[i] == s[j]) {
+            next_vec[i + 1] = j + 1;
+            ++i;
+            ++j;
+            if (s[i] == s[next_vec[i]])
+                next_vec[i] = next_vec[next_vec[i]];
+        } else if (j == 0) {
+            ++i;
+        } else {
+            j = max(next_vec[j], 0);
         }
-        // calculate next_val_vec value
-        if (s[j] == s[next_vec[j]])
-            next_vec[j] = next_vec[next_vec[j]];
     }
     return next_vec;
 }
