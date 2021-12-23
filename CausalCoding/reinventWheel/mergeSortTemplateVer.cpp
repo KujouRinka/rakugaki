@@ -40,3 +40,38 @@ void mergeTwo(Iter iter_first, Iter iter_mid, Iter iter_last) {
     copy(tmp_vec.begin(), tmp_vec.end(), iter_first);
 }
 
+struct TestSortStruct {
+public:
+    TestSortStruct(int a, int b)
+            : a(a), b(b) {}
+
+    int a;
+    int b;
+};
+
+bool operator<(const TestSortStruct &lhs, const TestSortStruct &rhs) {
+    return lhs.a < rhs.a || (lhs.a == rhs.a && lhs.b < rhs.b);
+}
+
+int main() {
+    vector<int> v1{1, 1, 4, 5, 1, 4};
+    mergeSort(v1.begin(), v1.end());
+    cout << "int sort" << endl;
+    for (auto i: v1)
+        cout << i << " ";
+    cout << endl;
+    cout << "float sort" << endl;
+    vector<float> v2{-1.1, 0.11, 4.23, 3.14, 7.77, -10.12};
+    mergeSort(v2.begin(), v2.end());
+    for (auto i: v2)
+        cout << i << " ";
+    cout << endl;
+    cout << "custom type sort" << endl;
+    vector<TestSortStruct> v3{TestSortStruct(1, 1), TestSortStruct(1, 2), TestSortStruct(1, 1), TestSortStruct(2, 3),
+                           TestSortStruct(-1, 0), TestSortStruct(-7, 1), TestSortStruct(10, 11)};
+    mergeSort(v3.begin(), v3.end());
+    for (auto &i: v3)
+        cout << i.a << " " << i.b << endl;
+    return 0;
+}
+
