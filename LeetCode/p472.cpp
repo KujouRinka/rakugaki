@@ -29,9 +29,7 @@ private:
     Node *head;
     bool _catSearch(const string &s, int idx, Node *start) {
         for (; idx < s.size(); ++idx) {
-            char ch = s[idx];
-            int next_idx = toInt(ch);
-            start = start->children[next_idx];
+            start = start->children[toInt(s[idx])];
             if (start == nullptr) {
                 return false;
             } else if (start->is_word) {
