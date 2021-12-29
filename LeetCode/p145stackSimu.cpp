@@ -20,16 +20,6 @@
  *     return;                          <- 4
  * }
  */
-/*
- * void postOrderVisit(TreeNode *root) {
- *     if (root == nullptr)             <- 0
- *         return;
- *     postOrderVisit(root->left);      <- 1
- *     postOrderVisit(root->right);     <- 2
- *     appendData(root->val);           <- 3
- *     return;                          <- 4
- * }
- */
 class Solution {
 public:
     vector<int> postorderTraversal(TreeNode *root) {
