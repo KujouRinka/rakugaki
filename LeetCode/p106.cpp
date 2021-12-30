@@ -22,8 +22,6 @@ private:
                               int inorder_lower, int inorder_upper, int postorder_lower, int postorder_upper) {
         if (inorder_lower >= inorder_upper)
             return nullptr;
-        if (inorder_lower == inorder_upper - 1)
-            return new TreeNode(inorder[inorder_lower]);
 
         int mid_val = postorder[postorder_upper - 1];
         int new_inorder_center = findIdx(inorder, mid_val);
