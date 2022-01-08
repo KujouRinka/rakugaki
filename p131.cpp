@@ -30,7 +30,7 @@ private:
         }
     }
 
-    bool isPalindrome(const string &s) {
+    static bool isPalindrome(const string &s) {
         int start_idx = 0, end_idx = s.size() - 1;
         while (start_idx < end_idx) {
             if (s[start_idx++] != s[end_idx--])
