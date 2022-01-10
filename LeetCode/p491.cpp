@@ -3,7 +3,6 @@ public:
     vector<vector<int>> findSubsequences(vector<int> &nums) {
         raw_data = nums;
         len = nums.size();
-        used = vector<bool>(len);
         backtracking(0);
         return result;
     }
@@ -11,7 +10,6 @@ public:
 private:
     int len;
     vector<int> raw_data;
-    vector<bool> used;
     vector<int> tmp_vec;
     vector<vector<int>> result;
 
@@ -28,9 +26,7 @@ private:
                 continue;
             appeared.insert(raw_data[i]);
             tmp_vec.push_back(raw_data[i]);
-            used[i] = true;
             backtracking(i + 1);
-            used[i] = false;
             tmp_vec.pop_back();
         }
     }
