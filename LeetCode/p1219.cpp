@@ -5,7 +5,7 @@ public:
         raw_data = grid;
         x_size = grid[0].size();
         y_size = grid.size();
-        visited = vector<vector<bool>>(y_size, vector<bool>(y_size, false));
+        visited = vector<vector<bool>>(y_size, vector<bool>(x_size, false));
         for (int i = 0; i < y_size; ++i) {
             for (int j = 0; j < x_size; ++j)
                 if (raw_data[i][j] != 0) {
