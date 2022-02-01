@@ -12,10 +12,10 @@ public:
 
         for (int i = 1; i < sz; ++i) {
             for (int j = 0; j < x_size; ++j) {
-                if (isValid(toIdx(toNumber(j) - nums[i])))
-                    dp[i][j] += dp[i - 1][toIdx(toNumber(j) - nums[i])];
-                if (isValid(toIdx(toNumber(j) + nums[i])))
-                    dp[i][j] += dp[i - 1][toIdx(toNumber(j) + nums[i])];
+                if (isValid(j - nums[i]))
+                    dp[i][j] += dp[i - 1][j - nums[i]];
+                if (isValid(j + nums[i]))
+                    dp[i][j] += dp[i - 1][j + nums[i]];
             }
         }
 
@@ -28,10 +28,6 @@ private:
 
     inline int toIdx(int idx) const {
         return idx + nums_sum;
-    }
-
-    inline int toNumber(int idx) const {
-        return idx - nums_sum;
     }
 
     inline bool isValid(int idx) const {
