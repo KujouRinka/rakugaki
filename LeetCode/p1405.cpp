@@ -1,10 +1,6 @@
 class Solution {
 public:
     string longestDiverseString(int a, int b, int c) {
-        priority_queue<pair<int, char>> hp;
-        hp.push({a, 'a'});
-        hp.push({b, 'b'});
-        hp.push({c, 'c'});
         string result;
         pair<int, char> pa = {a, 'a'}, pb = {b, 'b'}, pc = {c, 'c'};
         auto next = [&]() -> int {
