@@ -4,76 +4,69 @@ public:
             int n, const vector<vector<int>> &lamps,
             const vector<vector<int>> &queries
     ) {
-        grid_sz = n;
-        vector<vector<int>> brightness(n, vector<int>(n, 0));
+        grid_size = n;
         vector<int> result;
         result.reserve(queries.size());
-        set<pair<int, int>> lamp_set;
 
         for (auto &lamp: lamps) {
-            if (lamp_set.count({lamp[0], lamp[1]}) == 0) {
-                addLight(brightness, lamp[0], lamp[1]);
-                lamp_set.insert({lamp[0], lamp[1]});
+            if (lamp_set.count(lampToKey(lamp[0], lamp[1])) == 0) {
+                addLamp(lamp[0], lamp[1]);
             }
         }
+
         for (auto &query: queries) {
-            if (brightness[query[1]][query[0]] > 0)
+            int x = query[0], y = query[1];
+            if (x_light[x] || y_light[y] || left_light[y - x] || right_light[x + y])
                 result.push_back(1);
             else
                 result.push_back(0);
-            removeLightAround(brightness, lamp_set, query[0], query[1]);
+            removeLampAround(x, y);
         }
-
         return result;
     }
 
 private:
-    int grid_sz;
+    int grid_size;
+    unordered_map<int, int> x_light;
+    unordered_map<int, int> y_light;
+    unordered_map<int, int> left_light;
+    unordered_map<int, int> right_light;
+    unordered_set<long long> lamp_set;
 
-    void addLight(vector<vector<int>> &brightness, int x, int y) {
-        lightOper(brightness, x, y, 1);
+    void addLamp(int x, int y) {
+        ++x_light[x];
+        ++y_light[y];
+        ++left_light[y - x];
+        ++right_light[x + y];
+        lamp_set.insert(lampToKey(x, y));
     }
 
-    void removeLightAround(vector<vector<int>> &brightness, set<pair<int, int>> &lamp_set, int x, int y) {
+    void removeLampAround(int x, int y) {
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
                 int nx = x + i, ny = y + j;
-                if (!isValid(nx, ny))
+                if (lamp_set.count(lampToKey(nx, ny)) == 0)
                     continue;
-                if (lamp_set.count({nx, ny})) {
-                    lightOper(brightness, nx, ny, -1);
-                    lamp_set.erase({nx, ny});
-                }
+                if (isValid(nx, ny))
+                    removeLamp(nx, ny);
             }
         }
     }
 
-    void lightOper(vector<vector<int>> &brightness, int x, int y, int oper) {
-        for (int i = 0; i < grid_sz; ++i) {
-            if (i != y)
-                brightness[i][x] += add(brightness, x, i, oper);
-            if (i != x)
-                brightness[y][i] += add(brightness, i, y, oper);
-            int left_x = i - (y - x);
-            int left_y = i;
-            int right_x = x + y - i;
-            int right_y = i;
-            if (isValid(left_x, left_y) && (left_x != x || left_y != y))
-                brightness[left_y][left_x] += add(brightness, left_x, left_y, oper);
-            if (isValid(right_x, right_y) && (right_x != x || right_y != y))
-                brightness[right_y][right_x] += add(brightness, right_x, right_y, oper);
-        }
-        brightness[y][x] += add(brightness, x, y, oper);
+    void removeLamp(int x, int y) {
+        --x_light[x];
+        --y_light[y];
+        --left_light[y - x];
+        --right_light[x + y];
+        lamp_set.erase(lampToKey(x, y));
     }
 
-    static inline int add(vector<vector<int>> &brightness, int x, int y, int oper) {
-        if (oper >= 0)
-            return oper;
-        return brightness[y][x] - oper > 0 ? oper : 0;
+    inline long long lampToKey(long long x, long long y) const {
+        return y * grid_size + x;
     }
 
     inline bool isValid(int x, int y) {
-        return x >= 0 && x < grid_sz && y >= 0 && y < grid_sz;
+        return x >= 0 && x < grid_size && y >= 0 && y < grid_size;
     }
 };
 
