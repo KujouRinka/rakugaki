@@ -5,15 +5,15 @@ public:
         x_size = grid[0].size();
         for (int i = 0; i < x_size; ++i) {
             if (grid[0][i] == 1)
-                bfs(grid, i, 0);
+                dfs(grid, i, 0);
             if (grid[y_size - 1][i] == 1)
-                bfs(grid, i, y_size - 1);
+                dfs(grid, i, y_size - 1);
         }
         for (int i = 0; i < y_size; ++i) {
             if (grid[i][0] == 1)
-                bfs(grid, 0, i);
+                dfs(grid, 0, i);
             if (grid[i][x_size - 1] == 1)
-                bfs(grid, x_size - 1, i);
+                dfs(grid, x_size - 1, i);
         }
 
         int enclaves = 0;
@@ -27,17 +27,17 @@ public:
 private:
     int x_size, y_size;
     static const int dirs[4][2];
-    
-    void bfs(vector<vector<int>> &grid, int x, int y) {
+
+    void dfs(vector<vector<int>> &grid, int x, int y) {
         ++grid[y][x];
         for (auto dir : dirs) {
             int nx = x + dir[0];
             int ny = y + dir[1];
             if (isValid(nx, ny) && grid[ny][nx] == 1)
-                bfs(grid, nx, ny);
+                dfs(grid, nx, ny);
         }
     }
-    
+
     inline bool isValid(int x, int y) {
         return x >= 0 && x < x_size && y >= 0 && y < y_size;
     }
