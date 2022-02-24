@@ -18,7 +18,6 @@ int recursiveDup(int sf, int tf) {
     int rf = recursiveDup(sf, tf);
     if (rf != -1)
         close(nf);
-    printf("%d closed\n", nf);
     return rf;
 }
 
