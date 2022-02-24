@@ -16,8 +16,7 @@ int recursiveDup(int sf, int tf) {
     if (nf == tf)
         return nf;
     int rf = recursiveDup(sf, tf);
-    if (rf != -1)
-        close(nf);
+    close(nf);
     return rf;
 }
 
