@@ -29,7 +29,7 @@ public:
                     SP = st.top();
                     st.pop();
                     break;
-                case 2:     // r.push_back(root->val);
+                case 2:     // for (auto ch: root->children)     
                     if (get<1>(SP.first) == get<0>(SP.first)->children.size()) {
                         SP.second = 4;
                     } else {
@@ -37,13 +37,13 @@ public:
                         SP.second = 3;
                     }
                     break;
-                case 3:     // for (auto ch: root->children)
+                case 3:     // dfs(ch);
                     SP.second = 2;
                     ++get<1>(SP.first);
                     st.push(SP);
                     SP = {{AX, 0}, 0};
                     break;
-                case 4:     // dfs(ch);
+                case 4:     // r.push_back(root->val);     
                     r.push_back(get<0>(SP.first)->val);
                     ++SP.second;
                     break;
