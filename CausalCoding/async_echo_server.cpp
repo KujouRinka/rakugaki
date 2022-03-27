@@ -17,6 +17,7 @@ class TCPConn : public enable_shared_from_this<TCPConn> {
     static constexpr size_t BUF_SIZE = 1024;
 public:
     TCPConn(ip::tcp::socket &&sock) : _my_sock(std::move(sock)), _read_buffer(BUF_SIZE, 0) {}
+    ~TCPConn() { _my_sock.close(); }
 
     void to_read() {
         fill(_read_buffer.begin(), _read_buffer.end(), 0);
