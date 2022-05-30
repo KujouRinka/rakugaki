@@ -7,7 +7,7 @@ public:
         for (int i = 0; i < _n; ++i) {
             _current.push_back(_s_cp[i]);
             _used[i] = true;
-            backtracking(i);
+            backtracking();
             _used[i] = false;
             _current.pop_back();
         }
@@ -21,7 +21,7 @@ private:
     vector<string> _result;
     vector<bool> _used;
 
-    void backtracking(int which) {
+    void backtracking() {
         if (_current.size() == _n) {
             _result.emplace_back(_current);
             return;
@@ -31,7 +31,7 @@ private:
                 continue;
             _current.push_back(_s_cp[i]);
             _used[i] = true;
-            backtracking(i);
+            backtracking();
             _used[i] = false;
             _current.pop_back();
         }
