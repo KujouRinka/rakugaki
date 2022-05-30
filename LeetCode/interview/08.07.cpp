@@ -4,13 +4,7 @@ public:
         _n = S.size();
         _s_cp = std::move(S);
         _used = vector<bool>(_n, false);
-        for (int i = 0; i < _n; ++i) {
-            _current.push_back(_s_cp[i]);
-            _used[i] = true;
-            backtracking();
-            _used[i] = false;
-            _current.pop_back();
-        }
+        backtracking();
         return _result;
     }
 
