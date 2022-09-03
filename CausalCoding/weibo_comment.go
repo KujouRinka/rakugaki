@@ -18,13 +18,13 @@ var ch = make(chan int, 5)	// 最大线程
 func main() {
 	var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36 Edg/90.0.818.39"
 	var Cookie = "_T_WM=a6a9a364e025c1810824986a712d85b6; SUB=_2A25NfjcHDeRhGeFK6FQQ8C7OzTWIHXVugVlPrDV6PUJbktANLVrukW1NQ3n-EEt5PQjrzEwOrTt6XTdKZKhw-fks; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WF1LY10avHED9l_Up1R-AkO5NHD95QNSheceK57eoq4Ws4DqcjMi--NiK.Xi-2Ri--ciKnRi-zNS0B0So27ehzc1Btt"
-	var url = "https://weibo.cn/5254886684/Kbi6KikZB?type=comment&page=%d"	// 爬取目标
+	var url = "https://weibo.cn/1788283193/M2GYRhcyT?type=comment&page=%d"	// 爬取目标
 
 	var wg sync.WaitGroup
 	startTime := time.Now()
 	ticker := time.Tick(time.Second)
 
-	filePath := "F:\\Project\\CodeProject\\Go\\src\\testProject\\secondBuild\\comment.txt"	// 评论保存目录
+	filePath := "./comment.txt"	// 评论保存目录
 	output, err := os.OpenFile(filePath, os.O_APPEND, 0666)
 	if err != nil {
 		log.Println(err)
