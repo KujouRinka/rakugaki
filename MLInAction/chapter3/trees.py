@@ -1,6 +1,6 @@
 import operator
 from math import log
-from chapter3.treePlotter import *
+from treePlotter import *
 
 
 def create_data_set() -> (list, list):

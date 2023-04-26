@@ -1,4 +1,4 @@
-from chapter3.trees import *
+from trees import *
 
 
 def parse_data():
